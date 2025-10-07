@@ -26,7 +26,7 @@ app.use(
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json(
     successResponse({
-      message: "Digital Wallet API is running!",
+      message: "Cashyo Server is running!",
       version: "1.0.0",
     })
   );

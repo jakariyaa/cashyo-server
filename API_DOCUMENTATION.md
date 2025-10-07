@@ -1,6 +1,7 @@
-# Digital Wallet System API Documentation
+# Cashyo Server Documentation
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Authentication](#authentication)
 3. [API Endpoints](#api-endpoints)
@@ -16,9 +17,10 @@
 
 ## Introduction
 
-The Digital Wallet System API is a secure, role-based backend service for managing digital wallets and financial transactions. It provides endpoints for user authentication, wallet management, and various transaction types with proper validation and access control.
+The Cashyo Server is a secure, role-based backend service for managing digital wallets and financial transactions. It provides endpoints for user authentication, wallet management, and various transaction types with proper validation and access control.
 
 ### Technology Stack
+
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Language**: TypeScript
@@ -32,6 +34,7 @@ The Digital Wallet System API is a secure, role-based backend service for managi
 The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies for security. After successful login or registration, a token is set in an HTTP-only cookie which is automatically sent with subsequent requests.
 
 ### Authentication Flow
+
 1. User registers or logs in via `/api/auth/register` or `/api/auth/login`
 2. Server sets a JWT token in an HTTP-only cookie
 3. Browser automatically sends this cookie with all subsequent requests
@@ -42,12 +45,14 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ### Auth Routes
 
 #### Register a New User
+
 - **URL**: `/api/auth/register`
 - **Method**: `POST`
 - **Authentication**: Not required
 - **Authorization**: None
 
 **Request Body**:
+
 ```json
 {
   "name": "string (1-50 characters)",
@@ -58,6 +63,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -79,15 +85,18 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 400: Validation errors or user already exists
 
 #### Login User
+
 - **URL**: `/api/auth/login`
 - **Method**: `POST`
 - **Authentication**: Not required
 - **Authorization**: None
 
 **Request Body**:
+
 ```json
 {
   "email": "string (valid email format)",
@@ -96,6 +105,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -117,6 +127,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Incorrect email or password
 - 401: User account is deactivated
 - 401: Agent account is not approved yet
@@ -124,12 +135,14 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ### Wallet Routes
 
 #### Get Current User's Wallet
+
 - **URL**: `/api/wallets/me`
 - **Method**: `GET`
 - **Authentication**: Required
 - **Authorization**: User, Agent
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -153,16 +166,19 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 404: Wallet not found
 
 #### Get All Wallets (Admin)
+
 - **URL**: `/api/wallets/`
 - **Method**: `GET`
 - **Authentication**: Required
 - **Authorization**: Admin
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -193,19 +209,23 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 
 #### Block/Unblock Wallet (Admin)
+
 - **URL**: `/api/wallets/block/:id`
 - **Method**: `PATCH`
 - **Authentication**: Required
 - **Authorization**: Admin
 
 **URL Parameters**:
+
 - `id`: Wallet ID
 
 **Request Body**:
+
 ```json
 {
   "isActive": "boolean"
@@ -213,6 +233,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -236,6 +257,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 - 404: Wallet not found
@@ -243,12 +265,14 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ### Transaction Routes
 
 #### Add Money to Own Wallet (User)
+
 - **URL**: `/api/transactions/add`
 - **Method**: `POST`
 - **Authentication**: Required
 - **Authorization**: User
 
 **Request Body**:
+
 ```json
 {
   "amount": "number (positive)"
@@ -256,6 +280,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -278,18 +303,21 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 - 400: Wallet is blocked
 - 404: Wallet not found
 
 #### Withdraw Money from Own Wallet (User)
+
 - **URL**: `/api/transactions/withdraw`
 - **Method**: `POST`
 - **Authentication**: Required
 - **Authorization**: User
 
 **Request Body**:
+
 ```json
 {
   "amount": "number (positive)"
@@ -297,6 +325,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -319,6 +348,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 - 400: Wallet is blocked
@@ -326,12 +356,14 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 - 404: Wallet not found
 
 #### Send Money to Another User (User)
+
 - **URL**: `/api/transactions/send`
 - **Method**: `POST`
 - **Authentication**: Required
 - **Authorization**: User
 
 **Request Body**:
+
 ```json
 {
   "receiverEmail": "string (valid email format)",
@@ -340,6 +372,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -366,6 +399,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 - 400: Sender's wallet is blocked
@@ -375,12 +409,14 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 - 404: Receiver not found
 
 #### Cash-In to User's Wallet (Agent)
+
 - **URL**: `/api/transactions/cash-in`
 - **Method**: `POST`
 - **Authentication**: Required
 - **Authorization**: Agent (must be approved)
 
 **Request Body**:
+
 ```json
 {
   "userEmail": "string (valid email format)",
@@ -389,6 +425,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -411,6 +448,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 - 403: Agent not approved
@@ -420,12 +458,14 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 - 404: User wallet not found
 
 #### Cash-Out from User's Wallet (Agent)
+
 - **URL**: `/api/transactions/cash-out`
 - **Method**: `POST`
 - **Authentication**: Required
 - **Authorization**: Agent (must be approved)
 
 **Request Body**:
+
 ```json
 {
   "userEmail": "string (valid email format)",
@@ -434,6 +474,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -460,6 +501,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 - 403: Agent not approved
@@ -470,12 +512,14 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 - 404: User wallet not found
 
 #### Get Own Transactions (User/Agent)
+
 - **URL**: `/api/transactions/me`
 - **Method**: `GET`
 - **Authentication**: Required
 - **Authorization**: User, Agent
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -513,15 +557,18 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 
 #### Get All Transactions (Admin)
+
 - **URL**: `/api/transactions/`
 - **Method**: `GET`
 - **Authentication**: Required
 - **Authorization**: Admin
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -559,18 +606,21 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 
 ### User Routes
 
 #### Get All Users (Admin)
+
 - **URL**: `/api/users/`
 - **Method**: `GET`
 - **Authentication**: Required
 - **Authorization**: Admin
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -592,19 +642,23 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 
 #### Approve/Suspend Agent (Admin)
+
 - **URL**: `/api/users/approve/:id`
 - **Method**: `PATCH`
 - **Authentication**: Required
 - **Authorization**: Admin
 
 **URL Parameters**:
+
 - `id`: User ID
 
 **Request Body**:
+
 ```json
 {
   "isApproved": "boolean"
@@ -612,6 +666,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
@@ -631,6 +686,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 ```
 
 **Error Responses**:
+
 - 401: Not authenticated
 - 403: Insufficient permissions
 - 400: User is not an agent
@@ -641,6 +697,7 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 The API implements role-based access control with three distinct user roles:
 
 ### User
+
 - Can register and login to the system
 - Can add money to their wallet
 - Can withdraw money from their wallet
@@ -649,6 +706,7 @@ The API implements role-based access control with three distinct user roles:
 - Can view their own wallet information
 
 ### Agent
+
 - Must be approved by an admin before performing transactions
 - Can perform cash-in operations for users
 - Can perform cash-out operations for users
@@ -656,6 +714,7 @@ The API implements role-based access control with three distinct user roles:
 - Can view their own wallet information
 
 ### Admin
+
 - Can view all users in the system
 - Can approve or suspend agent accounts
 - Can view all wallets in the system
@@ -665,6 +724,7 @@ The API implements role-based access control with three distinct user roles:
 ## Request/Response Formats
 
 ### Success Response Format
+
 ```json
 {
   "success": true,
@@ -675,6 +735,7 @@ The API implements role-based access control with three distinct user roles:
 ```
 
 ### Error Response Format
+
 ```json
 {
   "success": false,
@@ -688,19 +749,20 @@ The API implements role-based access control with three distinct user roles:
 
 The API implements comprehensive error handling with the following HTTP status codes:
 
-| Status Code | Description |
-|-------------|-------------|
-| 200 | Successful GET, PUT, PATCH or DELETE request |
-| 201 | Successful POST request |
-| 400 | Bad request - validation errors, duplicate fields |
-| 401 | Unauthorized - invalid or expired token |
-| 403 | Forbidden - insufficient permissions |
-| 404 | Not found - resource doesn't exist |
-| 500 | Internal server error |
+| Status Code | Description                                       |
+| ----------- | ------------------------------------------------- |
+| 200         | Successful GET, PUT, PATCH or DELETE request      |
+| 201         | Successful POST request                           |
+| 400         | Bad request - validation errors, duplicate fields |
+| 401         | Unauthorized - invalid or expired token           |
+| 403         | Forbidden - insufficient permissions              |
+| 404         | Not found - resource doesn't exist                |
+| 500         | Internal server error                             |
 
 ### Common Error Responses
 
 #### Validation Error (400)
+
 ```json
 {
   "success": false,
@@ -718,6 +780,7 @@ The API implements comprehensive error handling with the following HTTP status c
 ```
 
 #### Authentication Error (401)
+
 ```json
 {
   "success": false,
@@ -728,6 +791,7 @@ The API implements comprehensive error handling with the following HTTP status c
 ```
 
 #### Authorization Error (403)
+
 ```json
 {
   "success": false,
@@ -738,6 +802,7 @@ The API implements comprehensive error handling with the following HTTP status c
 ```
 
 #### Not Found Error (404)
+
 ```json
 {
   "success": false,
@@ -750,6 +815,7 @@ The API implements comprehensive error handling with the following HTTP status c
 ## Usage Examples
 
 ### User Registration
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/register \
   -H "Content-Type: application/json" \
@@ -761,6 +827,7 @@ curl -X POST http://localhost:3000/api/auth/register \
 ```
 
 ### User Login
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -771,6 +838,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 
 ### Add Money to Wallet
+
 ```bash
 curl -X POST http://localhost:3000/api/transactions/add \
   -H "Content-Type: application/json" \
@@ -781,6 +849,7 @@ curl -X POST http://localhost:3000/api/transactions/add \
 ```
 
 ### Send Money to Another User
+
 ```bash
 curl -X POST http://localhost:3000/api/transactions/send \
   -H "Content-Type: application/json" \
@@ -792,6 +861,7 @@ curl -X POST http://localhost:3000/api/transactions/send \
 ```
 
 ### Get Own Transactions
+
 ```bash
 curl -X GET http://localhost:3000/api/transactions/me \
   -b "token=JWT_TOKEN"
@@ -800,10 +870,12 @@ curl -X GET http://localhost:3000/api/transactions/me \
 ## Dependencies & Requirements
 
 ### Runtime Requirements
+
 - Node.js (version 14 or higher)
 - MongoDB (version 4.0 or higher)
 
 ### NPM Dependencies
+
 - **Express**: Web framework
 - **Mongoose**: MongoDB object modeling
 - **JSONWebToken**: JWT implementation
@@ -813,6 +885,7 @@ curl -X GET http://localhost:3000/api/transactions/me \
 - **Dotenv**: Environment variable management
 
 ### Development Dependencies
+
 - **TypeScript**: Typed JavaScript
 - **Nodemon**: Auto-restart server during development
 - **TS-Node**: TypeScript execution environment
@@ -820,6 +893,7 @@ curl -X GET http://localhost:3000/api/transactions/me \
 - **Supertest**: HTTP assertions for testing
 
 ### Environment Variables
+
 The following environment variables must be set in a `.env` file:
 
 ```

@@ -1,7 +1,7 @@
 {
-  "name": "digital-wallet-system",
+  "name": "cashyo-server",
   "version": "1.0.0",
-  "description": "A secure, modular, and role-based backend API for a digital wallet system",
+  "description": "A secure, modular, and role-based backend API for a Cashyo Server",
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
@@ -32,8 +32,8 @@
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^24.3.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.7.0",
     "@types/supertest": "^6.0.3",
     "mongodb-memory-server": "^10.2.0",
     "nodemon": "^3.1.10",

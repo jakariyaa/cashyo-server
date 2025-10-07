@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Digital Wallet API",
-    "description": "Complete API collection for Digital Wallet System with authentication, wallet management, transactions, and user management endpoints.",
+    "description": "Complete API collection for Cashyo Server with authentication, wallet management, transactions, and user management endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

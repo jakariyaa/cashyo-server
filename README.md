@@ -1,6 +1,6 @@
-# Digital Wallet System
+# Cashyo Server
 
-A secure, modular, and role-based backend API for a digital wallet system built with Node.js, Express, TypeScript, MongoDB, and Mongoose. This API provides endpoints for user authentication, wallet management, and various financial transactions with proper validation and role-based access control.
+A secure, modular, and role-based backend API for a Cashyo Server built with Node.js, Express, TypeScript, MongoDB, and Mongoose. This API provides endpoints for user authentication, wallet management, and various financial transactions with proper validation and role-based access control.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
@@ -28,7 +28,7 @@ A secure, modular, and role-based backend API for a digital wallet system built 
 
 ## Project Overview
 
-The Digital Wallet System API offers a comprehensive solution for managing digital wallets with features such as user registration and authentication, wallet management, and various transaction types including money transfers, cash-in, and cash-out operations. The system implements role-based access control with three distinct user roles:
+The Cashyo Server offers a comprehensive solution for managing digital wallets with features such as user registration and authentication, wallet management, and various transaction types including money transfers, cash-in, and cash-out operations. The system implements role-based access control with three distinct user roles:
 
 - **User**: Can add money, withdraw money, and send money to other users
 - **Agent**: Can perform cash-in and cash-out transactions for users
@@ -62,7 +62,7 @@ The API includes robust validation using Zod schemas, secure authentication with
 ## Project Structure
 
 ```
-digital-wallet-system/
+cashyo-server/
 ├── src/
 │   ├── app.ts                 # Express application setup
 │   ├── server.ts              # Server entry point
@@ -101,7 +101,7 @@ digital-wallet-system/
 
    ```bash
    git clone <repository-url>
-   cd digital-wallet-system
+   cd cashyo-server
    ```
 
 2. Install dependencies:

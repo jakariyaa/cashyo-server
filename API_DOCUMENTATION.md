@@ -692,6 +692,57 @@ The API uses JWT (JSON Web Token) based authentication with HTTP-only cookies fo
 - 400: User is not an agent
 - 404: User not found
 
+#### Update User
+
+- **URL**: `/api/users/:id`
+- **Method**: `PATCH`
+- **Authentication**: Required
+- **Authorization**: User (can update own profile), Admin (can update any profile)
+
+**URL Parameters**:
+
+- `id`: User ID
+
+**Request Body**:
+
+```json
+{
+  "name": "string (optional)",
+  "email": "string (optional, valid email format)",
+  "password": "string (optional, minimum 6 characters)",
+  "role": "enum ['user', 'agent'] (optional, admin only)",
+  "isApproved": "boolean (optional, admin only)",
+  "isActive": "boolean (optional, admin only)"
+}
+```
+
+**Success Response**:
+
+```json
+{
+  "success": true,
+  "message": "User updated successfully",
+  "data": {
+    "_id": "string",
+    "name": "string",
+    "email": "string",
+    "role": "string",
+    "isActive": "boolean",
+    "isApproved": "boolean",
+    "createdAt": "date",
+    "updatedAt": "date"
+  },
+  "statusCode": 200
+}
+```
+
+**Error Responses**:
+
+- 400: Validation errors
+- 401: Not authenticated
+- 403: Insufficient permissions
+- 404: User not found
+
 ## Authorization & Roles
 
 The API implements role-based access control with three distinct user roles:

@@ -1,26 +1,14 @@
 import cookieParser from "cookie-parser";
-import cors from "cors";
-import dotenv from "dotenv";
 import express, { Application, Request, Response } from "express";
 import errorHandler from "./middlewares/error.middleware";
 import router from "./routes";
 import { errorResponse, successResponse } from "./utils/responseHandler";
-
-dotenv.config();
 
 const app: Application = express();
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-
-// CORS configuration
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://cashyo.jakariya.eu.org"],
-    credentials: true,
-  })
-);
 
 // Root route
 app.get("/", (req: Request, res: Response) => {

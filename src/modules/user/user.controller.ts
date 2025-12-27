@@ -101,3 +101,35 @@ export const approveAgent = async (
     next(error);
   }
 };
+
+// Get all agents (public)
+export const getAllAgents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 12;
+    const skip = (page - 1) * limit;
+
+    const agents = await User.find({ role: "agent" })
+      .select("name email image country location bio rating agentType agentStatus")
+      .skip(skip)
+      .limit(limit);
+
+    const total = await User.countDocuments({ role: "agent" });
+
+    res.status(200).json(successResponse({
+      agents,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+        hasMore: page * limit < total
+      }
+    }, "Agents retrieved successfully"));
+  } catch (error) {
+    next(error);
+  }
+};

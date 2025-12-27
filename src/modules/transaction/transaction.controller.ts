@@ -9,12 +9,12 @@ import AppError from "../../utils/AppError";
 import { successResponse, errorResponse } from "../../utils/responseHandler";
 import { calculateTransactionFee } from "../../utils/transactionFees";
 import { UserDocument } from "../../types/user.types";
-import { 
-  AddMoneyInput, 
-  WithdrawMoneyInput, 
-  SendMoneyInput, 
-  CashInInput, 
-  CashOutInput 
+import {
+  AddMoneyInput,
+  WithdrawMoneyInput,
+  SendMoneyInput,
+  CashInInput,
+  CashOutInput
 } from "../../validation/transaction.validation";
 
 // Helper function to check if wallet is active
@@ -46,12 +46,22 @@ export const addMoney = async (
 
     await session.withTransaction(async () => {
       // Get user's wallet
-      const wallet = await Wallet.findOne({ userId: req.user!._id }).session(
+      let wallet = await Wallet.findOne({ userId: req.user!._id }).session(
         session
       );
 
       if (!wallet) {
-        throw new AppError("Wallet not found", 404);
+        // Lazy creation
+        const initialBalance = parseInt(process.env.INITIAL_WALLET_BALANCE || '50');
+        wallet = await Wallet.create([{
+          userId: req.user!._id,
+          balance: initialBalance,
+          isActive: true,
+        }], { session }).then(wallets => wallets[0]);
+      }
+
+      if (!wallet) {
+        throw new AppError("Failed to find or create wallet", 500);
       }
 
       // Check if wallet is active
@@ -490,21 +500,35 @@ export const getMyTransactions = async (
       return next(new AppError("You are not logged in!", 401));
     }
 
+    // Get user wallet safely
+    let wallet = await Wallet.findOne({ userId: req.user._id });
+    if (!wallet) {
+      // Lazy create if needed, though usually getMyWallet is called first. 
+      // For now, if no wallet, returning empty transactions is safe.
+      // Or consistent behavior: create it.
+      const initialBalance = parseInt(process.env.INITIAL_WALLET_BALANCE || '50');
+      wallet = await Wallet.create({
+        userId: req.user._id,
+        balance: initialBalance,
+        isActive: true,
+      });
+    }
+
+    if (!wallet) {
+      throw new AppError("Failed to find or create wallet", 500);
+    }
+
     const transactions = await Transaction.find({
       $or: [
         { initiatedBy: req.user._id },
         {
-          fromWalletId: {
-            $in: [await Wallet.findOne({ userId: req.user._id }).select("_id")],
-          },
+          fromWalletId: wallet._id,
         },
         {
-          toWalletId: {
-            $in: [await Wallet.findOne({ userId: req.user._id }).select("_id")],
-          },
+          toWalletId: wallet._id,
         },
       ],
-    })
+    } as any)
       .populate("fromWalletId", "userId balance")
       .populate("toWalletId", "userId balance")
       .populate("initiatedBy", "name email")

@@ -1,12 +1,15 @@
 // src/modules/user/user.routes.ts
 
 import express from 'express';
-import { getAllUsers, approveAgent, updateUser } from './user.controller';
+import { getAllUsers, approveAgent, updateUser, getAllAgents } from './user.controller';
 import { protect, restrictTo } from '../../middlewares/auth.middleware';
 import validate from '../../middlewares/validation.middleware';
 import { approveAgentSchema, updateUserSchema } from '../../validation/user.validation';
 
 const router = express.Router();
+
+// Public routes
+router.get('/agents', getAllAgents);
 
 // Protect all routes after this middleware
 router.use(protect);

@@ -19,12 +19,26 @@ const userSchema = new Schema<UserDocument>(
       trim: true,
       lowercase: true,
     },
-    password: {
+    // Password is handled by BetterAuth in 'account' collection for OAuth
+    // or implicitly for email/password.
+    // However, for compatibility with existing queries, we might want to keep it optional?
+    // BetterAuth doesn't store password in the user document usually.
+    // Removing it to avoid confusion.
+    image: {
       type: String,
-      required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
-      select: false, // Don't include password in queries by default
     },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    sessions: [{
+      type: Schema.Types.ObjectId,
+      ref: "Session"
+    }],
+    accounts: [{
+      type: Schema.Types.ObjectId,
+      ref: "Account"
+    }],
     role: {
       type: String,
       enum: ['admin', 'user', 'agent'],
@@ -32,39 +46,57 @@ const userSchema = new Schema<UserDocument>(
     },
     isActive: {
       type: Boolean,
-      default: true,
+      default: true
     },
     isApproved: {
       type: Boolean,
-      default: false,
+      default: false
     },
+    bio: {
+      type: String,
+      default: '',
+    },
+    country: {
+      type: String,
+      default: 'Global',
+    },
+    location: {
+      type: String,
+      default: '',
+    },
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    agentType: {
+      type: String,
+      enum: ['Branch', 'ATM', 'Kiosk'],
+      default: 'Branch'
+    },
+    agentStatus: {
+      type: String,
+      enum: ['Open', 'Closed', 'Closing Soon'],
+      default: 'Open'
+    },
+
   },
   {
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    collection: 'user' // BetterAuth uses singular 'user' collection by default
   }
 );
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error: any) {
-    next(error);
-  }
-});
+// Hooks removed - handled by BetterAuth
 
 // Create wallet after user is saved
-userSchema.post('save', async function (doc) {
+userSchema.post('save', async function (doc: UserDocument) {
   try {
     // Check if wallet already exists for this user
     const existingWallet = await Wallet.findOne({ userId: doc._id });
-    
+
     if (!existingWallet) {
       // Create wallet with initial balance
       const initialBalance = parseInt(process.env.INITIAL_WALLET_BALANCE || '50');
@@ -78,11 +110,6 @@ userSchema.post('save', async function (doc) {
     console.error('Error creating wallet:', error);
   }
 });
-
-// Compare password method
-userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
-  return bcrypt.compare(candidatePassword, this.password);
-};
 
 // Indexes
 // The 'unique: true' option on the email field already creates an index

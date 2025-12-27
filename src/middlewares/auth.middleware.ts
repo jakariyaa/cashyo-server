@@ -19,8 +19,8 @@ interface JwtPayload {
   role: string;
 }
 
-import { fromNodeHeaders } from "better-auth/node";
-import { auth } from "../utils/auth";
+
+import { getAuth } from "../utils/auth";
 
 export const protect = async (
   req: Request,
@@ -30,6 +30,8 @@ export const protect = async (
   try {
 
     // 1) Verify session using BetterAuth
+    const { fromNodeHeaders } = await (new Function("return import('better-auth/node')")());
+    const auth = await getAuth();
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(req.headers)
     });

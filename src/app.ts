@@ -22,8 +22,8 @@ app.get("/", (req: Request, res: Response) => {
   );
 });
 
-import { toNodeHandler } from "better-auth/node";
-import { auth } from "./utils/auth";
+
+import { getAuth } from "./utils/auth";
 import cors from "cors";
 
 // Allow CORS for frontend
@@ -35,7 +35,11 @@ app.use(cors({
 }));
 
 // Better Auth Route
-app.all("/api/auth/*path", toNodeHandler(auth));
+app.all("/api/auth/*path", async (req, res) => {
+  const { toNodeHandler } = await (new Function("return import('better-auth/node')")());
+  const auth = await getAuth();
+  return toNodeHandler(auth)(req, res);
+});
 
 // API routes
 app.use(router);
